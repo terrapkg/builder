@@ -23,7 +23,6 @@ env:
 jobs:
   build:
     strategy:
-      fail-fast: 
       matrix:
         os:
           - ubuntu-latest
