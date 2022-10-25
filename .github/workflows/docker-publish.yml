@@ -22,7 +22,13 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: 
+      matrix:
+        os:
+          - ubuntu-latest
+          - ARM64
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
       packages: write
@@ -41,11 +47,6 @@ jobs:
         uses: sigstore/cosign-installer@f3c664df7af409cb4873aa5068053ba9d61a57b6 #v2.6.0
         with:
           cosign-release: 'v1.11.0'
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: arm64
 
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
@@ -83,7 +84,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.os == 'ARM64' && 'linux/arm64' || matrix.os == 'ubuntu-latest' && 'linux/amd64' }}
 
 
       # Sign the resulting Docker image digest except on PRs.
