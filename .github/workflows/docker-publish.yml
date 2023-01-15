@@ -13,18 +13,16 @@ env:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          # - ARM64
-    runs-on: ${{ matrix.os }}
+    runs-on: ARM64
     permissions:
       contents: read
       packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2.2.1
@@ -41,7 +39,6 @@ jobs:
         uses: docker/build-push-action@v3.3.0
         with:
           context: .
-          # set arch to amd64 for ubuntu-latest
-          platforms: linux/${{ matrix.os == 'ubuntu-latest' && 'amd64' || 'arm64' }}
+          platforms: linux/amd64 linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
