@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: "45 4 * * *"
   push:
-    branches: ["main"]
+    branches: ["f38"]
 
 env:
   REGISTRY: ghcr.io
@@ -41,4 +41,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:f38
