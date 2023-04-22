@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: "45 4 * * *"
   push:
-    branches: ["main","f37","f38","f39"]
+    branches: ["f37","f38","f39"]
 
 env:
   REGISTRY: ghcr.io
@@ -13,6 +13,9 @@ env:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        branch: ["f37", "f38", "f39"]
     runs-on: ARM64
     permissions:
       contents: read
@@ -20,6 +23,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -41,4 +46,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:f39
