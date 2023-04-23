@@ -5,7 +5,6 @@ on:
   schedule:
     - cron: "45 4 * * *"
   push:
-    branches: ["f37","f38"]
 
 env:
   REGISTRY: ghcr.io
@@ -13,9 +12,6 @@ env:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        branch: ["f37", "f38"]
     runs-on: ARM64
     permissions:
       contents: read
@@ -46,4 +42,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:f37
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.GITHUB_REF_NAME }}
