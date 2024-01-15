@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:39
+FROM registry.fedoraproject.org/fedora-minimal:rawhide
 
 RUN dnf5 update -y --setopt=install_weak_deps=False
 RUN dnf5 install -y --setopt=install_weak_deps=False dnf-plugins-core dnf
