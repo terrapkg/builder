@@ -24,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ matrix.branch }}
+          ref: f${{ matrix.branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -46,4 +46,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.branch }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:f${{ matrix.branch }}
