@@ -3,7 +3,7 @@ name: Docker
 on:
   workflow_dispatch:
   schedule:
-    - cron: "45 4 * * *"
+    - cron: "0 * * * *"
   push:
 
 env:
