@@ -1,9 +1,10 @@
-FROM registry.fedoraproject.org/fedora:38
+FROM registry.fedoraproject.org/fedora-minimal:38
 
-RUN dnf update -y
-RUN dnf install -y dnf-plugins-core
-RUN dnf config-manager --add-repo='https://github.com/terrapkg/subatomic-repos/raw/main/terra38.repo'
-RUN dnf -y install terra-mock-configs subatomic-cli anda mock rpm-build mock-scm rpmlint dnf-plugins-core createrepo_c git gcc curl wget less rpmrebuild dnf5 dnf5-plugins
+RUN dnf5 update -y --setopt=install_weak_deps=False
+RUN dnf5 install -y --setopt=install_weak_deps=False dnf-plugins-core dnf
+RUN dnf config-manager --add-repo='https://github.com/terrapkg/subatomic-repos/raw/main/terra.repo'
+RUN dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+RUN dnf5 -y --setopt=install_weak_deps=False install terra-mock-configs subatomic-cli anda mock rpm-build mock-scm rpmlint git-core git-lfs curl wget less podman fuse-overlayfs sudo gh
 
-RUN dnf clean all
-RUN rm -rf /var/cache/{dnf,yum}
+#RUN dnf5 clean all
+#RUN rm -rf /var/cache/{dnf,yum}
