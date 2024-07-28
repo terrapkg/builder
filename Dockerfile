@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:rawhide
+FROM registry.fedoraproject.org/fedora-minimal:41
 
 RUN dnf5 update -y --setopt=install_weak_deps=False
 
