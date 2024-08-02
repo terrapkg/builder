@@ -7,4 +7,5 @@ RUN curl https://cli.github.com/packages/rpm/gh-cli.repo -o /etc/yum.repos.d/gh-
 
 RUN dnf5 -y --setopt=install_weak_deps=False install subatomic-cli anda rpm-build rpmlint git-core git-lfs wget less fuse-overlayfs sudo gh
 
-RUN dnf5 clean all
+# Hack to fix %dist
+RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist
