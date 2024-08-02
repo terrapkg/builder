@@ -2,10 +2,9 @@ FROM registry.fedoraproject.org/fedora-minimal:rawhide
 
 RUN dnf5 update -y --setopt=install_weak_deps=False
 
-RUN dnf5 install -y --setopt=install_weak_deps=False dnf5-plugins
-RUN dnf5 config-manager addrepo --from-repofile='https://github.com/terrapkg/subatomic-repos/raw/main/terra.repo'
-RUN dnf5 config-manager addrepo --from-repofile=https://cli.github.com/packages/rpm/gh-cli.repo
+RUN curl https://github.com/terrapkg/subatomic-repos/raw/main/terra.repo -o /etc/yum.repos.d/terra.repo
+RUN curl https://cli.github.com/packages/rpm/gh-cli.repo -o /etc/yum.repos.d/gh-cli.repo
 
-RUN dnf5 -y --setopt=install_weak_deps=False install terra-mock-configs subatomic-cli anda mock rpm-build mock-scm rpmlint git-core git-lfs curl wget less podman fuse-overlayfs sudo gh
+RUN dnf5 -y --setopt=install_weak_deps=False install subatomic-cli anda rpm-build rpmlint git-core git-lfs wget less fuse-overlayfs sudo gh
 
 RUN dnf5 clean all
