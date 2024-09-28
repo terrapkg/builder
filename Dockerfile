@@ -1,11 +1,15 @@
-FROM registry.fedoraproject.org/fedora-minimal:rawhide
+FROM quay.io/centos/centos:stream10-development
 
-RUN echo 'max_parallel_downloads=20' >> /etc/dnf/dnf.conf
-RUN dnf5 update -y --setopt=install_weak_deps=False
+RUN sed -i 's@^enabled=0@enabled=1@' /etc/yum.repos.d/almalinux-crb.repo &\
+    curl https://dl.fedoraproject.org/pub/epel/10/Everything/x86_64/os/Packages/e/epel-release-10-1.el10_0.noarch.rpm -o epel-release-latest-10.noarch.rpm &\
+    curl https://cli.github.com/packages/rpm/gh-cli.repo -o /etc/yum.repos.d/gh-cli.repo &\
+    echo 'max_parallel_downloads=20' >> /etc/dnf/dnf.conf &\
+    wait
 
-RUN dnf5 install -y --setopt=install_weak_deps=False dnf5-plugins
-RUN dnf5 config-manager addrepo --from-repofile=https://cli.github.com/packages/rpm/gh-cli.repo
+RUN rpm -i ./*.rpm && \
+    sed -Ei "s@^#baseurl=.+@baseurl=https://dl.fedoraproject.org/pub/epel/\$releasever_major\${releasever_minor:+.\$releasever_minor}/Everything/\$basearch/os/@" /etc/yum.repos.d/epel.repo && \
+    sed -Ei '/^metalink/ s/^/#/' /etc/yum.repos.d/epel.repo
 
-RUN dnf5 in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' terra-{release,mock-configs} subatomic-cli anda mock rpm-build mock-scm rpmlint git-lfs wget less podman fuse-overlayfs sudo gh
+RUN dnf in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' terra-{release,mock-configs} subatomic-cli anda mock rpm-build mock-scm rpmlint git-lfs wget less podman fuse-overlayfs sudo gh
 
-RUN dnf5 clean all
+RUN dnf clean all
