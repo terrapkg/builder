@@ -24,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: f${{ matrix.branch }}
+          ref: ${{ startsWith(matrix.branch, 'el') && '' || 'f' }}${{ matrix.branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
