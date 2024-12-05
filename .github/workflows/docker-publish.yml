@@ -3,7 +3,7 @@ name: Docker
 on:
   workflow_dispatch:
   schedule:
-    - cron: "45 4 * * *"
+    - cron: "0 0 * * *"
   push:
 
 env:
@@ -12,15 +12,19 @@ env:
 
 jobs:
   build:
-    runs-on: ARM64
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    strategy:
+      matrix:
+        branch: ["39", "40", "41", "rawhide", "el10"]
+      fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ matrix.branch }}
+          ref: ${{ !startsWith(matrix.branch, 'el') && 'f' || '' }}${{ matrix.branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -42,4 +46,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:f${{ matrix.branch }}
