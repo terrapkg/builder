@@ -1,7 +1,7 @@
 FROM quay.io/centos/centos:stream10-development
 
 #RUN sed -i 's@^enabled=0@enabled=1@' /etc/yum.repos.d/almalinux-crb.repo &\
-RUN curl https://dl.fedoraproject.org/pub/epel/10/Everything/$(rpm -E '%_arch')/Packages/e/epel-release-10-2.el10_0.noarch.rpm -o epel-release-latest-10.noarch.rpm &\
+RUN curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm -o epel-release-latest-10.noarch.rpm &\
     curl https://cli.github.com/packages/rpm/gh-cli.repo -o /etc/yum.repos.d/gh-cli.repo &\
     echo 'max_parallel_downloads=20' >> /etc/dnf/dnf.conf &\
     wait
