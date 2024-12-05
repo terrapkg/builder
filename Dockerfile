@@ -11,6 +11,6 @@ RUN rpm -i ./*.rpm && \
     sed -Ei '/^metalink/ s/^/#/' /etc/yum.repos.d/epel.repo && \
     sed -Ei '/\[crb\]/,/^$/ s@^enabled=0$@enabled=1@' /etc/yum.repos.d/centos.repo
 
-RUN dnf in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terrael$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terrael$releasever/key.asc' terra-{release,mock-configs} subatomic-cli anda mock rpm-build mock-scm git-lfs wget less podman fuse-overlayfs sudo gh
+RUN dnf in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terrael$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terrael$releasever/key.asc' terra-{release,mock-configs} subatomic-cli anda mock rpm-build mock-scm git-lfs wget less podman fuse-overlayfs sudo gh script
 
 RUN dnf clean all
