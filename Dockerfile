@@ -11,4 +11,4 @@ RUN rpm -i ./*.rpm && \
     sed -Ei '/^metalink/ s/^/#/' /etc/yum.repos.d/epel.repo && \
     sed -Ei '/\[crb\]/,/^$/ s@^enabled=0$@enabled=1@' /etc/yum.repos.d/centos.repo
 
-RUN dnf in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terrael$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terrael$releasever/key.asc' terra-{release,mock-configs} anda-srpm-macros subatomic-cli anda rpm-build git-lfs wget less podman fuse-overlayfs gh mold util-linux
+RUN dnf in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terrael$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terrael$releasever/key.asc' terra-{release,mock-configs} anda-srpm-macros subatomic-cli anda rpm-build git-lfs wget less podman fuse-overlayfs gh util-linux bash bzip2 centos-stream-release coreutils cpio diffutils epel-rpm-macros findutils gawk glibc-minimal-langpack grep gzip info patch redhat-rpm-config sed tar unzip which xz
