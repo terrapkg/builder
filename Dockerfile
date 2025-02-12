@@ -1,4 +1,5 @@
-FROM registry.fedoraproject.org/fedora-minimal:rawhide
+#FROM registry.fedoraproject.org/fedora-minimal:rawhide
+FROM docker.io/fedora:rawhide
 
 COPY dnf.conf /etc/dnf/dnf.conf
 
