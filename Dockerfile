@@ -1,4 +1,4 @@
-FROM quay.io/centos/centos:stream10-development
+FROM quay.io/almalinuxorg/almalinux:10-kitten
 
 #RUN sed -i 's@^enabled=0@enabled=1@' /etc/yum.repos.d/almalinux-crb.repo &\
 RUN curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm -o epel-release-latest-10.noarch.rpm &\
