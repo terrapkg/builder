@@ -11,5 +11,3 @@ RUN dnf5 in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://re
 
 # Hack to fix %dist
 RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist
-
-RUN dnf5 downgrade -y dnf5
