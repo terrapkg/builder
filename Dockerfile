@@ -1,4 +1,4 @@
-FROM quay.io/almalinuxorg/almalinux:10-kitten
+FROM registry.access.redhat.com/ubi10/ubi
 
 #RUN sed -i 's@^enabled=0@enabled=1@' /etc/yum.repos.d/almalinux-crb.repo &\
 RUN curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm -o epel-release-latest-10.noarch.rpm &\
@@ -17,4 +17,4 @@ RUN dnf in -y \
     --setopt='terra.gpgkey=https://repos.fyralabs.com/terrael$releasever/key.asc' \
     terra-{release,mock-configs} anda-srpm-macros redhat-rpm-config epel-rpm-macros \
     subatomic-cli anda rpm-build git-lfs podman fuse-overlayfs mold \
-    wget less gh util-linux bash bzip2 almalinux-release cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz dnf-plugins-core
+    wget less gh util-linux bash bzip2 redhat-release cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz dnf-plugins-core
