@@ -9,7 +9,7 @@ RUN dnf5 up -y
 
 RUN dnf5 swap -y systemd-standalone-sysusers systemd
 
-RUN dnf5 in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terrarawhide/key.asc' terra-{release{,-extras},mock-configs} subatomic-cli anda{,-srpm-macros} mock-scm  adoptium-temurin-java-repository gh git-lfs wget less podman fuse-overlayfs dnf5-plugins script mold which sudo
+RUN dnf5 in -y --setopt=install_weak_deps=False --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terrarawhide/key.asc' terra-{release{,-extras},mock-configs} subatomic-cli anda{,-srpm-macros} mock-scm adoptium-temurin-java-repository gh git-lfs wget less podman fuse-overlayfs dnf5-plugins script mold which sudo jq
 
 # Hack to fix %dist
 RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist
