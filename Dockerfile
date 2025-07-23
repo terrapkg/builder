@@ -17,4 +17,4 @@ RUN dnf in -y \
     --setopt='terra.gpgkey=https://repos.fyralabs.com/terrael$releasever/key.asc' \
     terra-{release,mock-configs} anda-srpm-macros redhat-rpm-config epel-rpm-macros almalinux-release adoptium-temurin-java-repository \
     subatomic-cli anda rpm-build git-lfs podman fuse-overlayfs mold dnf-plugins-core \
-    wget less gh util-linux bash bzip2 cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz
+    wget less gh util-linux bash bzip2 cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz jq
