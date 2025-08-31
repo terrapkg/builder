@@ -10,5 +10,5 @@ RUN \
         --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' \
         --setopt='terra.gpgkey=https://repos.fyralabs.com/terra43/key.asc' \
         terra-{release{,-extras},mock-configs} subatomic-cli anda{,-srpm-macros} mock-scm adoptium-temurin-java-repository \
-        gh git-lfs wget less podman fuse-overlayfs dnf5-plugins script mold sudo jq @buildsys-build &&\
+        gh wget less podman fuse-overlayfs dnf5-plugins script mold sudo jq @buildsys-build &&\
     dnf5 clean packages dbcache
