@@ -8,7 +8,7 @@ RUN \
     sed -iE '/^metadata_expire/d' /etc/yum.repos.d/fedora-rawhide.repo &&\
     cat /etc/yum.repos.d/fedora-rawhide.repo >> /etc/dnf/dnf.conf &&\
     cat /etc/dnf/dnf.conf &&\
-    dnf5 up -y &&\
+    dnf5 up -y --refresh &&\
     dnf5 swap -y systemd-standalone-sysusers systemd &&\
     dnf5 in -y terra-mock-configs subatomic-cli anda{,-srpm-macros} terra-appstream-helper mock-scm \
         gh wget less podman fuse-overlayfs dnf5-plugins script mold sudo terra-sccache jq @buildsys-build &&\
