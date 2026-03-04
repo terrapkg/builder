@@ -12,6 +12,6 @@ RUN \
     dnf5 up -y &&\
     dnf5 swap -y systemd-standalone-sysusers systemd &&\
     dnf5 in -y terra-mock-configs subatomic-cli anda{,-srpm-macros} terra-appstream-helper mock-scm \
-        gh wget less podman fuse-overlayfs dnf5-plugins dnf-plugins-core script mold sudo appstream terra-sccache jq @buildsys-build &&\
+        gh wget less podman fuse-overlayfs dnf5-plugins dnf-plugins-core script mold sudo terra-sccache jq @buildsys-build &&\
     dnf5 clean packages dbcache &&\
     cp -pv /etc/pki/rpm-gpg/RPM-GPG-KEY-terra* -t /etc/pki/mock
