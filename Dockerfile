@@ -1,4 +1,4 @@
-FROM almalinux:10-kitten-minimal
+FROM almalinux:10.1-minimal
 
 RUN curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm -o epel-release-latest-10.noarch.rpm &\
     curl https://cli.github.com/packages/rpm/gh-cli.repo -o /etc/yum.repos.d/gh-cli.repo &\
