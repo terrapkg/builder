@@ -18,7 +18,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        branch: ["rawhide", "f44", "f43", "f42", "el10"]
+        branch: ["rawhide", "44", "43", "42", "el10"]
       fail-fast: false
     steps:
       - name: Checkout repository
