@@ -4,7 +4,7 @@ COPY dnf.conf /etc/dnf/dnf.conf
 
 RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist
 RUN sed -i '/\[fedora\]\|\[updates\]/a enabled=0' /etc/dnf/dnf.conf
-RUN sed -iE'/^metadata_expire/d' /etc/yum.repos.d/fedora-rawhide.repo
+RUN sed -iE '/^metadata_expire/d' /etc/yum.repos.d/fedora-rawhide.repo
 RUN cat /etc/yum.repos.d/fedora-rawhide.repo >> /etc/dnf/dnf.conf
 RUN cat /etc/dnf/dnf.conf
 RUN dnf in -y --nogpgcheck --repo=terra terra-gpg-keys
