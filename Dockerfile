@@ -14,7 +14,7 @@ RUN curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
     sed -Ei '/\[crb\]/,/^$/ s@^enabled=0$@enabled=1@' /etc/yum.repos.d/almalinux-crb.repo && \
     dnf install -y \
         --setopt=install_weak_deps=0 \
-        terra-mock-configs anda-srpm-macros terra-appstream-helper redhat-rpm-config epel-rpm-macros almalinux-release adoptium-temurin-java-repository \
+        terra-mock-configs anda-srpm-macros terra-appstream-helper terra-sccache redhat-rpm-config epel-rpm-macros almalinux-release adoptium-temurin-java-repository \
         subatomic-cli anda rpm-build git-lfs podman fuse-overlayfs mold dnf-plugins-core \
         wget less gh util-linux bash bzip2 cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz jq &&\
     dnf clean all
