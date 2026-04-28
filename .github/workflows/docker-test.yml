@@ -4,7 +4,7 @@ permissions:
 on:
   workflow_dispatch:
   pull_request:
-    branches: ["rawhide", "44", "43", "42", "el10"]
+    branches: ["frawhide", "f44", "f43", "f42", "el10"]
 
 jobs:
   build:
