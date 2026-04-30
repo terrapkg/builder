@@ -15,6 +15,7 @@ env:
 
 jobs:
   build:
+    if: ${{ github.event_name != 'pull_request' }}
     runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
@@ -27,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || format('{0}{1}', (!startsWith(matrix.branch, 'el') && 'f' || ''), matrix.branch) }}
+          ref: ${{ !startsWith(matrix.branch, 'el') && 'f' || '' }}${{ matrix.branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
@@ -50,3 +51,25 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ !startsWith(matrix.branch, 'el') && 'f' || '' }}${{ matrix.branch }}
+  test:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Build Docker image
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: false
