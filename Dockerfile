@@ -12,6 +12,6 @@ RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist && \
     dnf swap -y systemd-standalone-sysusers systemd && \
     dnf in -y terra-mock-configs subatomic-cli anda{,-srpm-macros} terra-appstream-helper mock-scm \
         gh wget less podman fuse-overlayfs dnf5-plugins util-linux-script mold sudo jq @buildsys-build tar && \
-    curl https://github.com/mozilla/sccache/releases/download/v0.15.0/sccache-v0.15.0-$(arch)-unknown-linux-musl.tar.gz | tar x --strip-components=1 && \
+    curl -L https://github.com/mozilla/sccache/releases/download/v0.15.0/sccache-v0.15.0-$(arch)-unknown-linux-musl.tar.gz | tar x --strip-components=1 && \
     install -Dpm755 sccache -t /usr/bin && \
     dnf clean packages dbcache
