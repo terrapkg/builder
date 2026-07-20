@@ -48,4 +48,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ !startsWith(matrix.branch, 'el') && 'f' || '' }}${{ matrix.branch }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
