@@ -6,7 +6,7 @@ on:
   schedule:
     - cron: "0 0/6 * * *"
   push:
-    branches: ["frawhide", "f44", "f43", "f42", "el10"]
+    branches: ["frawhide", "f44", "f43", "f42", "el10", "tumbleweed"]
 
 env:
   REGISTRY: ghcr.io
@@ -20,7 +20,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        branch: ["rawhide", "44", "43", "42", "el10"]
+        branch: ["rawhide", "44", "43", "42", "el10", "tumbleweed"]
       fail-fast: false
     steps:
       - name: Checkout repository
