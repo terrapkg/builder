@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:44
+FROM registry.fedoraproject.org/fedora-minimal:45
 
 COPY dnf.conf /etc/dnf/dnf.conf
 
