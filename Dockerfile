@@ -11,6 +11,5 @@ RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist && \
     dnf up -y && \
     dnf swap -y systemd-standalone-sysusers systemd && \
     dnf in -y terra-mock-configs subatomic-cli anda{,-srpm-macros} terra-appstream-helper mock-scm \
-        gh wget less podman fuse-overlayfs dnf5-plugins dnf-plugins-core util-linux-script mold sudo terra-sccache jq desktop-file-utils \
-        @buildsys-build &&\
+        gh wget less podman fuse-overlayfs dnf5-plugins util-linux-script mold sudo jq desktop-file-utils @buildsys-build && \
     dnf clean packages dbcache
