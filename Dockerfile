@@ -7,4 +7,4 @@ COPY tuatara-tumbleweed.asc /tuatara-tumbleweed.asc
 RUN curl https://raw.githubusercontent.com/terrapkg/tuatara/refs/heads/tumbleweed/tuatara/release/tuatara.repo -o /etc/zypp/repos.d/tuatara.repo && \
     rpm --import /tuatara-tumbleweed.asc && \
     zy up -y && \
-    zy in -y subatomic-cli anda{,-srpm-macros} terra-appstream-helper gh wget less mold sudo jq '*-rpm-macros' ssh
+    zy in -y subatomic-cli anda{,-srpm-macros} terra-appstream-helper gh wget less mold sudo jq '*-rpm-macros' openssh
