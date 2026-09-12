@@ -1,11 +1,15 @@
-FROM registry.fedoraproject.org/fedora-minimal:rawhide
+ARG BASE_IMAGE=registry.fedoraproject.org/fedora-minimal:rawhide
+FROM ${BASE_IMAGE}
+ARG BASE_IMAGE
 
 COPY dnf.conf /etc/dnf/dnf.conf
 
-RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist && \
-    sed -i '/\[fedora\]\|\[updates\]/a enabled=0' /etc/dnf/dnf.conf && \
-    sed -iE '/^metadata_expire/d' /usr/share/dnf5/repos.d/fedora-rawhide.repo && \
-    cat /usr/share/dnf5/repos.d/fedora-rawhide.repo >> /etc/dnf/dnf.conf && \
+RUN if [ "${BASE_IMAGE}" = "registry.fedoraproject.org/fedora-minimal:rawhide" ]; then \
+        sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist && \
+        sed -i '/\[fedora\]\|\[updates\]/a enabled=0' /etc/dnf/dnf.conf && \
+        sed -iE '/^metadata_expire/d' /usr/share/dnf5/repos.d/fedora-rawhide.repo && \
+        cat /usr/share/dnf5/repos.d/fedora-rawhide.repo >> /etc/dnf/dnf.conf; \
+    fi && \
     cat /etc/dnf/dnf.conf && \
     dnf in -y --nogpgcheck --repo=terra terra-gpg-keys && \
     dnf up -y && \
