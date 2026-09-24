@@ -6,7 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04-arm
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64, linux/riscv64]
+      fail-fast: false
+    runs-on: ${{ matrix.platform == 'linux/arm64' && 'ubuntu-24.04-arm' || matrix.platform == 'linux/riscv64' && 'ubuntu-24.04-riscv' || 'ubuntu-24.04' }}
     steps:
       - name: Checkout branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -21,5 +25,6 @@ jobs:
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
+          build-args: BASE_IMAGE=${{ matrix.platform == 'linux/riscv64' && 'fedorariscv/base:44' || 'registry.fedoraproject.org/fedora-minimal:rawhide' }}
           push: false

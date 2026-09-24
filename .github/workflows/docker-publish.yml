@@ -14,13 +14,25 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.platform == 'linux/arm64' && 'ubuntu-24.04-arm' || matrix.platform == 'linux/riscv64' && 'ubuntu-24.04-riscv' || 'ubuntu-24.04' }}
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
         branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed"]
+        platform: [linux/amd64, linux/arm64, linux/riscv64]
+        exclude:
+          - branch: "rawhide"
+            platform: linux/riscv64
+          - branch: "45"
+            platform: linux/riscv64
+          - branch: "43"
+            platform: linux/riscv64
+          - branch: "el10"
+            platform: linux/riscv64
+          - branch: "tumbleweed"
+            platform: linux/riscv64
       fail-fast: false
     steps:
       - name: Checkout repository
@@ -30,6 +42,17 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
+
+      - name: Configure RISC-V base image
+        if: ${{ matrix.platform == 'linux/riscv64' }}
+        run: |
+          if ! grep -q '^ARG BASE_IMAGE=' Dockerfile; then
+            {
+              printf '%s\n' 'ARG BASE_IMAGE=fedorariscv/base:44' 'FROM ${BASE_IMAGE}' 'ARG BASE_IMAGE'
+              tail -n +2 Dockerfile
+            } > Dockerfile.riscv
+            mv Dockerfile.riscv Dockerfile
+          fi
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
@@ -42,10 +65,61 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image by digest
+        id: build
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
+          platforms: ${{ matrix.platform }}
+          build-args: BASE_IMAGE=${{ matrix.platform == 'linux/riscv64' && 'fedorariscv/base:44' || 'registry.fedoraproject.org/fedora-minimal:rawhide' }}
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=${{ github.event_name != 'pull_request' }}
+
+      - name: Export digest
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          mkdir -p "${{ runner.temp }}/digests"
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          name: digests-${{ matrix.branch }}-${{ matrix.platform == 'linux/amd64' && 'amd64' || matrix.platform == 'linux/arm64' && 'arm64' || 'riscv64' }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    strategy:
+      matrix:
+        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed"]
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ matrix.branch }}-*
+          merge-multiple: true
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Create and push manifest
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create \
+            -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}" \
+            $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
