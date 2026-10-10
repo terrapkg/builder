@@ -16,5 +16,5 @@ RUN curl https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
         --setopt=install_weak_deps=0 \
         terra-mock-configs terra-scripts anda-srpm-macros terra-appstream-helper terra-sccache redhat-rpm-config epel-rpm-macros almalinux-release adoptium-temurin-java-repository \
         subatomic-cli anda rpm-build git-lfs podman fuse-overlayfs mold dnf-plugins-core \
-        wget less gh util-linux bash bzip2 cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz jq &&\
+        wget less gh util-linux bash bzip2 cpio diffutils findutils gawk glibc-minimal-langpack grep info patch sed tar gzip unzip which xz jq nocache &&\
     dnf clean all
