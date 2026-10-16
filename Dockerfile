@@ -7,7 +7,7 @@ RUN sed -i 's/.fc%{fedora}/.fcrawhide/g' /usr/lib/rpm/macros.d/macros.dist && \
     sed -iE '/^metadata_expire/d' /usr/share/dnf5/repos.d/fedora-rawhide.repo && \
     cat /usr/share/dnf5/repos.d/fedora-rawhide.repo >> /etc/dnf/dnf.conf && \
     cat /etc/dnf/dnf.conf && \
-    dnf in -y --nogpgcheck --repo=terra terra-gpg-keys && \
+    dnf in -y --nogpgcheck --repo=staging-terra terra-gpg-keys && \
     dnf up -y && \
     dnf swap -y systemd-standalone-sysusers systemd && \
     dnf in -y terra-mock-configs terra-scripts subatomic-cli anda{,-srpm-macros} terra-appstream-helper mock-scm \
