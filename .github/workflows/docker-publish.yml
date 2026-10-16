@@ -20,7 +20,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed"]
+        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed", "frawhide-staging"]
       fail-fast: false
     steps:
       - name: Checkout repository
