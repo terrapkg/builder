@@ -1,0 +1,9 @@
+{
+  "repoOwner": "terrapkg",
+  "repoName": "builder",
+  "resetAuthor": true,
+  "targetBranchChoices": ["frawhide", "um45", "um44", "um43"],
+  "branchLabelMapping": {
+    "^sync-(.+)$": "$1"
+  }
+}
