@@ -1,51 +1,30 @@
-name: Docker
+name: Docker Publish
 permissions:
   contents: read
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0/6 * * *"
+    - cron: "0 0/2 * * *"
   push:
     branches: ["frawhide", "f45", "f44", "f43", "el10", "tumbleweed", "frawhide-staging"]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   build:
-    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed", "rawhide-staging"]
+    uses: ./.github/workflows/docker.yml
+    secrets: inherit
     permissions:
       contents: read
       packages: write
-    strategy:
-      matrix:
-        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed", "rawhide-staging"]
-      fail-fast: false
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: ${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
-
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
-
-      - name: Log into registry ${{ env.REGISTRY }}
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
+      id-token: write
+    with:
+      publish: ${{ github.event_name != 'pull_request' }}
+      ref: ${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
+      artifact_name: digests-${{ matrix.branch }}
+      tags: |
+        type=raw,value=${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
+        type=schedule,pattern=${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}-{{date 'X'}}
+        type=schedule,pattern=nightly-{{date 'X'}}
