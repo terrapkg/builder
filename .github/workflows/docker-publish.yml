@@ -6,7 +6,7 @@ on:
   schedule:
     - cron: "0 0/2 * * *"
   push:
-    branches: ["frawhide", "f45", "f44", "f43", "el10", "tumbleweed", "frawhide-staging"]
+    branches: ["frawhide", "f45", "f44", "f43", "frawhide-staging"]
 
 jobs:
   build:
@@ -22,9 +22,9 @@ jobs:
       id-token: write
     with:
       publish: ${{ github.event_name != 'pull_request' }}
-      ref: ${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
+      ref: f${{ matrix.branch }}
       artifact_name: digests-${{ matrix.branch }}
       tags: |
-        type=raw,value=${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}
-        type=schedule,pattern=${{ !startsWith(matrix.branch, 'el') && (matrix.branch != 'tumbleweed') && 'f' || '' }}${{ matrix.branch }}-{{date 'X'}}
+        type=raw,value=f${{ matrix.branch }}
+        type=schedule,pattern=f${{ matrix.branch }}-{{date 'X'}}
         type=schedule,pattern=nightly-{{date 'X'}}
