@@ -6,14 +6,14 @@ on:
   schedule:
     - cron: "0 0/2 * * *"
   push:
-    branches: ["frawhide", "f45", "f44", "f43", "staging-frawhide"]
+    branches: ["frawhide", "f45", "f44", "f43", "frawhide-staging"]
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        branch: ["rawhide", "45", "44", "43", "staging-frawhide"]
+        branch: ["rawhide", "45", "44", "43", "rawhide-staging"]
     uses: ./.github/workflows/docker.yml
     secrets: inherit
     permissions:
