@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed", "rawhide-staging"]
+        branch: ["rawhide", "45", "44", "43", "rawhide-staging"]
     uses: ./.github/workflows/docker.yml
     secrets: inherit
     permissions:
