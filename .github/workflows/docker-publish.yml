@@ -6,14 +6,14 @@ on:
   schedule:
     - cron: "0 0/2 * * *"
   push:
-    branches: ["frawhide", "f45", "f44", "f43", "frawhide-staging"]
+    branches: ["frawhide", "f45", "f44", "f43", "staging-frawhide"]
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        branch: ["rawhide", "45", "44", "43", "el10", "tumbleweed", "rawhide-staging"]
+        branch: ["rawhide", "45", "44", "43", "staging-frawhide"]
     uses: ./.github/workflows/docker.yml
     secrets: inherit
     permissions:
@@ -22,7 +22,7 @@ jobs:
       id-token: write
     with:
       publish: ${{ github.event_name != 'pull_request' }}
-      ref: f${{ matrix.branch }}
+      ref: ${{ !startsWith(matrix.branch, 'staging') && 'f' || '' }}
       artifact_name: digests-${{ matrix.branch }}
       tags: |
         type=raw,value=f${{ matrix.branch }}
