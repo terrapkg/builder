@@ -22,7 +22,7 @@ jobs:
       id-token: write
     with:
       publish: ${{ github.event_name != 'pull_request' }}
-      ref: ${{ !startsWith(matrix.branch, 'staging') && 'f' || '' }}
+      ref: f${{ matrix.branch }}
       artifact_name: digests-${{ matrix.branch }}
       tags: |
         type=raw,value=f${{ matrix.branch }}
